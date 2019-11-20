@@ -1,0 +1,161 @@
+<html>
+
+<head>
+<title>Start-up funding in Africa above $1m</title>
+</head>
+
+<body>
+
+<p>Seeing the information posted by <a href="https://www.linkedin.com/in/maxime-bayen-a267a210/">Maxime Bayen</a> on LinkedIn, I had some questions and needed answers. This motivated the below using R (a statistical computing software). </p>
+
+<h3 style="color: brown; text-transform: uppercase; ">Setting environment</h3>
+
+<!--begin.rcode
+suppressMessages(require(tidyr))
+suppressMessages(require(dplyr))
+suppressMessages(require(ggplot2))
+suppressMessages(require(RColorBrewer))
+suppressMessages(require(reshape2))
+suppressMessages(require(extrafont))
+suppressMessages(require(htmlTable))
+#font_import() # to fetch font from OS
+end.rcode-->
+
+<!--begin.rcode
+setwd("C:/Users/Adebayo/Documents/Data-Science-All")
+data <- read.csv("startups.csv", sep = ",", header=T) # read data with header
+end.rcode-->
+
+<h3 style="color: brown; text-transform: uppercase;">Viewing the entire data</h3>
+
+<!--begin.rcode
+htmlTable(data) #View data's dataframe
+end.rcode-->
+
+<h3 style="color: brown; text-transform: uppercase;">Investigating categories in the data</h3>
+
+<!--begin.rcode
+levels(data$Country.HQ) # examine countries where HQs are located.
+levels(data$Sector) # examine sectors.
+end.rcode-->
+
+
+<h3  style="color: green; text-transform: uppercase;"> Q1: What is the geographic distribution of the startups? </h3>
+
+<!--begin.rcode
+by_country <- data %>%
+              group_by(Country.HQ) %>%
+              summarise( country_count = n() ) %>%
+              arrange(desc(Country.HQ))
+
+by_country <- as.data.frame(by_country)
+htmlTable(by_country)
+end.rcode-->
+
+<!--begin.rcode fig.width=10, fig.height=8
+ggplot(by_country, aes(x=by_country$Country.HQ, y=by_country$country_count)) +
+  geom_bar(stat="identity", fill = "darkgray") +
+  labs(x = "Country HQ", y = "Count") +
+  theme_classic() +
+  ggtitle("LOCATION OF STARTUP HQs") +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.background = element_blank(), panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle=90, hjust=1),
+        text=element_text(size=14,  family="Garamond", face="bold"),
+        axis.line = element_line(colour = "black")) +
+  ggsave(file = "Location.png",width = 20, height = 15, units = "cm", dpi = 1200)
+end.rcode-->
+
+
+<h3 style="color: green; text-transform: uppercase;">Q2: What is the sector(-ial) distribution of these startups? </h3>
+
+<!--begin.rcode
+by_sector <- data %>%
+  group_by(Sector) %>%
+  summarise( sector_count = n() ) %>%
+  arrange(desc(Sector))
+
+by_sector <- as.data.frame(by_sector)
+htmlTable(by_sector)
+end.rcode-->
+
+<!--begin.rcode fig.width=10, fig.height=8
+ggplot(by_sector, aes(x=by_sector$Sector, y=by_sector$sector_count)) +
+  geom_bar(stat="identity", fill = "darkgray") +
+  labs(x = "Sector", y = "Count") +
+  theme_classic() +
+  ggtitle("SECTORS OF STARTUPS") +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.background = element_blank(), panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle=90, hjust=1),
+        text=element_text(size=14,  family="Garamond", face="bold"),
+        axis.line = element_line(colour = "black")) +
+  ggsave(file = "Sectors.png",width = 20, height = 15, units = "cm", dpi = 1200)
+end.rcode-->
+
+
+<h3 style="color: green; text-transform: uppercase;"> Q3: When were these startups launched?</h3>
+
+<!--begin.rcode
+by_launch <- data %>%
+  group_by(Launch) %>%
+  summarise( launch_count = n() ) %>%
+  arrange(desc(Launch))
+
+by_launch <- as.data.frame(by_launch)
+htmlTable(by_launch)
+end.rcode-->
+
+<!--begin.rcode fig.width=10, fig.height=8
+ggplot(by_launch, aes(x=as.character(by_launch$Launch), y=by_launch$launch_count)) +
+  geom_bar(stat="identity", fill = "darkgray") +
+  labs(x = "Year", y = "Count") +
+  theme_classic() +
+  ggtitle("LAUNCH YEARS OF STARTUPS") +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.background = element_blank(), panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle=90, hjust=1),
+        text=element_text(size=14,  family="Garamond", face="bold"),
+        axis.line = element_line(colour = "black")) +
+  ggsave(file = "Launch.png",width = 20, height = 15, units = "cm", dpi = 1200)
+end.rcode-->
+
+
+
+<h3 style="color: green; text-transform: uppercase;"> Q4: How much have these startups received by country of HQ? </h3>
+
+<!--begin.rcode
+by_amount <- data %>%
+  group_by(Country.HQ) %>%
+  summarise( Amount = sum(Amount, na.rm = TRUE )  ) %>%
+  arrange(desc(Country.HQ))
+
+by_amount <- as.data.frame(by_amount)
+htmlTable(by_amount)
+end.rcode-->
+
+<!--begin.rcode fig.width=10, fig.height=8
+ggplot(by_amount, aes(x=as.character(by_amount$Country.HQ), y=by_amount$Amount)) +
+  geom_bar(stat="identity", fill = "darkgray") +
+  labs(x = "Country", y = "Amount (million dollars)") +
+  theme_classic() +
+  ggtitle("STARTUP HQ LOCATION AND FUNDING RAISED") +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.background = element_blank(), panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle=90, hjust=1),
+        text=element_text(size=14,  family="Garamond", face="bold"),
+        axis.line = element_line(colour = "black")) +
+  ggsave(file = "Amount.png",width = 20, height = 15, units = "cm", dpi = 1200)
+end.rcode-->
+
+
+<p><b>Produced by <a href="https://www.linkedin.com/in/bayoishola20/">@bayoishola20</a></b></p>
+
+<h6 style="color: red;"> Have a suggestion? Let me know. </h6>
+
+</body>
+</html>

@@ -1,0 +1,1310 @@
+<html>
+
+<head>
+<style type="text/css">
+.inline {
+  background-color: #f7f7f7;
+  border:solid 1px #B0B0B0;
+}
+.error {
+	font-weight: bold;
+	color: #FF0000;
+}
+.warning {
+	font-weight: bold;
+}
+.message {
+	font-style: italic;
+}
+.source, .output, .warning, .error, .message {
+	padding: 0 1em;
+  border:solid 1px #F7F7F7;
+}
+.source {
+  background-color: #f5f5f5;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.center {
+  text-align: center;
+}
+.hl.num {
+  color: #AF0F91;
+}
+.hl.str {
+  color: #317ECC;
+}
+.hl.com {
+  color: #AD95AF;
+  font-style: italic;
+}
+.hl.opt {
+  color: #000000;
+}
+.hl.std {
+  color: #585858;
+}
+.hl.kwa {
+  color: #295F94;
+  font-weight: bold;
+}
+.hl.kwb {
+  color: #B05A65;
+}
+.hl.kwc {
+  color: #55aa55;
+}
+.hl.kwd {
+  color: #BC5A65;
+  font-weight: bold;
+}
+</style>
+<title>Start-up funding in Africa above $1m</title>
+</head>
+
+<body>
+
+<p>Seeing the information posted by <a href="https://www.linkedin.com/in/maxime-bayen-a267a210/">Maxime Bayen</a> on LinkedIn, I had some questions and needed answers. This motivated the below using R (a statistical computing software). </p>
+
+<h3 style="color: brown; text-transform: uppercase; ">Setting environment</h3>
+
+<div class="chunk" id="unnamed-chunk-1"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">suppressMessages</span><span class="hl std">(</span><span class="hl kwd">require</span><span class="hl std">(tidyr))</span>
+<span class="hl kwd">suppressMessages</span><span class="hl std">(</span><span class="hl kwd">require</span><span class="hl std">(dplyr))</span>
+<span class="hl kwd">suppressMessages</span><span class="hl std">(</span><span class="hl kwd">require</span><span class="hl std">(ggplot2))</span>
+<span class="hl kwd">suppressMessages</span><span class="hl std">(</span><span class="hl kwd">require</span><span class="hl std">(RColorBrewer))</span>
+<span class="hl kwd">suppressMessages</span><span class="hl std">(</span><span class="hl kwd">require</span><span class="hl std">(reshape2))</span>
+<span class="hl kwd">suppressMessages</span><span class="hl std">(</span><span class="hl kwd">require</span><span class="hl std">(extrafont))</span>
+<span class="hl kwd">suppressMessages</span><span class="hl std">(</span><span class="hl kwd">require</span><span class="hl std">(htmlTable))</span>
+<span class="hl com">#font_import() # to fetch font from OS</span>
+</pre></div>
+</div></div>
+
+<div class="chunk" id="unnamed-chunk-2"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">setwd</span><span class="hl std">(</span><span class="hl str">&quot;C:/Users/Adebayo/Documents/Data-Science-All&quot;</span><span class="hl std">)</span>
+<span class="hl std">data</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">read.csv</span><span class="hl std">(</span><span class="hl str">&quot;startups.csv&quot;</span><span class="hl std">,</span> <span class="hl kwc">sep</span> <span class="hl std">=</span> <span class="hl str">&quot;,&quot;</span><span class="hl std">,</span> <span class="hl kwc">header</span><span class="hl std">=T)</span> <span class="hl com"># read data with header</span>
+</pre></div>
+</div></div>
+
+<h3 style="color: brown; text-transform: uppercase;">Viewing the entire data</h3>
+
+<div class="chunk" id="unnamed-chunk-3"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">htmlTable</span><span class="hl std">(data)</span> <span class="hl com">#View data's dataframe</span>
+</pre></div>
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey;'> </th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>ï..Startup</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Country.HQ</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Launch</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Sector</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Amount</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='text-align: left;'>1</td>
+<td style='text-align: center;'>Andela</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Education</td>
+<td style='text-align: center;'>100</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>2</td>
+<td style='text-align: center;'>SolarNow</td>
+<td style='text-align: center;'>Uganda</td>
+<td style='text-align: center;'>2011</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>9</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>3</td>
+<td style='text-align: center;'>Shortlist</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Jobs</td>
+<td style='text-align: center;'>2</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>4</td>
+<td style='text-align: center;'>WhereIsMyTransport</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2008</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'>1.9</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>5</td>
+<td style='text-align: center;'>Flow</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Housing</td>
+<td style='text-align: center;'>1.5</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>6</td>
+<td style='text-align: center;'>Bbox</td>
+<td style='text-align: center;'>UK</td>
+<td style='text-align: center;'>2010</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>31</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>7</td>
+<td style='text-align: center;'>M-Tiba</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>Healthcare</td>
+<td style='text-align: center;'>1.5</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>8</td>
+<td style='text-align: center;'>The Sun Exchange</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>9</td>
+<td style='text-align: center;'>Copia</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2010</td>
+<td style='text-align: center;'>Retail</td>
+<td style='text-align: center;'>2</td>
+<td style='text-align: center;'>January</td>
+</tr>
+<tr>
+<td style='text-align: left;'>10</td>
+<td style='text-align: center;'>Xineoh</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2010</td>
+<td style='text-align: center;'>Deeptech</td>
+<td style='text-align: center;'>1.5</td>
+<td style='text-align: center;'>February</td>
+</tr>
+<tr>
+<td style='text-align: left;'>11</td>
+<td style='text-align: center;'>Talent2Africa</td>
+<td style='text-align: center;'>Senegal</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Jobs</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>February</td>
+</tr>
+<tr>
+<td style='text-align: left;'>12</td>
+<td style='text-align: center;'>Tugende</td>
+<td style='text-align: center;'>Uganda</td>
+<td style='text-align: center;'>2012</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>5</td>
+<td style='text-align: center;'>February</td>
+</tr>
+<tr>
+<td style='text-align: left;'>13</td>
+<td style='text-align: center;'>RapidDeploy</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>eGov</td>
+<td style='text-align: center;'>12</td>
+<td style='text-align: center;'>February</td>
+</tr>
+<tr>
+<td style='text-align: left;'>14</td>
+<td style='text-align: center;'>TeamApt</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>5.5</td>
+<td style='text-align: center;'>February</td>
+</tr>
+<tr>
+<td style='text-align: left;'>15</td>
+<td style='text-align: center;'>Sokowatch</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Retail</td>
+<td style='text-align: center;'>2.5</td>
+<td style='text-align: center;'>February</td>
+</tr>
+<tr>
+<td style='text-align: left;'>16</td>
+<td style='text-align: center;'>Wealth Migrate</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2009</td>
+<td style='text-align: center;'>Housing</td>
+<td style='text-align: center;'>2.2</td>
+<td style='text-align: center;'>February</td>
+</tr>
+<tr>
+<td style='text-align: left;'>17</td>
+<td style='text-align: center;'>Retail Capital</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2010</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>41.7</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>18</td>
+<td style='text-align: center;'>Daystar Power</td>
+<td style='text-align: center;'>Mauritius</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>26</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>19</td>
+<td style='text-align: center;'>PEG Africa</td>
+<td style='text-align: center;'>Ghana</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>25</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>20</td>
+<td style='text-align: center;'>mPharma</td>
+<td style='text-align: center;'>Ghana</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Healthcare</td>
+<td style='text-align: center;'>13.5</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>21</td>
+<td style='text-align: center;'>OneFi</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2012</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>5</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>22</td>
+<td style='text-align: center;'>Aerobotics</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Agriculture</td>
+<td style='text-align: center;'>2</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>23</td>
+<td style='text-align: center;'>Valr</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.5</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>24</td>
+<td style='text-align: center;'>Flexclub</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.2</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>25</td>
+<td style='text-align: center;'>Farmcrowdy</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Agriculture</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>March</td>
+</tr>
+<tr>
+<td style='text-align: left;'>26</td>
+<td style='text-align: center;'>ArabyAds</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Retail</td>
+<td style='text-align: center;'>6.5</td>
+<td style='text-align: center;'>April</td>
+</tr>
+<tr>
+<td style='text-align: left;'>27</td>
+<td style='text-align: center;'>Kudi</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>5</td>
+<td style='text-align: center;'>April</td>
+</tr>
+<tr>
+<td style='text-align: left;'>28</td>
+<td style='text-align: center;'>Centbee</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.3</td>
+<td style='text-align: center;'>April</td>
+</tr>
+<tr>
+<td style='text-align: left;'>29</td>
+<td style='text-align: center;'>Neopenda</td>
+<td style='text-align: center;'>Uganda</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>Healthcare</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>April</td>
+</tr>
+<tr>
+<td style='text-align: left;'>30</td>
+<td style='text-align: center;'>mDaaS</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Healthcare</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>April</td>
+</tr>
+<tr>
+<td style='text-align: left;'>31</td>
+<td style='text-align: center;'>PayItUp</td>
+<td style='text-align: center;'>Zimbabwe</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>13</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>32</td>
+<td style='text-align: center;'>Chipper Cash</td>
+<td style='text-align: center;'>Ghana</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>2.4</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>33</td>
+<td style='text-align: center;'>InstaDeep</td>
+<td style='text-align: center;'>Tunisia</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>Deeptech</td>
+<td style='text-align: center;'>7</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>34</td>
+<td style='text-align: center;'>Gokada</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'>5.3</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>35</td>
+<td style='text-align: center;'>MyDawa</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Healthcare</td>
+<td style='text-align: center;'>3</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>36</td>
+<td style='text-align: center;'>Intergreatme</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>2.2</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>37</td>
+<td style='text-align: center;'>GovChat</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>eGov</td>
+<td style='text-align: center;'>1.4</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>38</td>
+<td style='text-align: center;'>Safeboda</td>
+<td style='text-align: center;'>Uganda</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'></td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>39</td>
+<td style='text-align: center;'>Jibu</td>
+<td style='text-align: center;'>Tanzania</td>
+<td style='text-align: center;'>2012</td>
+<td style='text-align: center;'>Water</td>
+<td style='text-align: center;'>1.5</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>40</td>
+<td style='text-align: center;'>Yumamia</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Retail</td>
+<td style='text-align: center;'>1.5</td>
+<td style='text-align: center;'>May</td>
+</tr>
+<tr>
+<td style='text-align: left;'>41</td>
+<td style='text-align: center;'>Sistema.bio</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2009</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>12</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>42</td>
+<td style='text-align: center;'>Swvl</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'>42</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>43</td>
+<td style='text-align: center;'>TymeBank</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2012</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>13.8</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>44</td>
+<td style='text-align: center;'>Arnergy</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Agriculture</td>
+<td style='text-align: center;'>9</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>45</td>
+<td style='text-align: center;'>Max</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>Services</td>
+<td style='text-align: center;'>7</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>46</td>
+<td style='text-align: center;'>LulaLend</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>6.5</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>47</td>
+<td style='text-align: center;'>Twiga Foods</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Agriculture</td>
+<td style='text-align: center;'>5</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>48</td>
+<td style='text-align: center;'>SweepSouth</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Services</td>
+<td style='text-align: center;'>2.1</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>49</td>
+<td style='text-align: center;'>Inclusivity Solutions</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.6</td>
+<td style='text-align: center;'>June</td>
+</tr>
+<tr>
+<td style='text-align: left;'>50</td>
+<td style='text-align: center;'>Redavia</td>
+<td style='text-align: center;'>Ghana</td>
+<td style='text-align: center;'>2010</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>2</td>
+<td style='text-align: center;'>July</td>
+</tr>
+<tr>
+<td style='text-align: left;'>51</td>
+<td style='text-align: center;'>Opay</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>50</td>
+<td style='text-align: center;'>July</td>
+</tr>
+<tr>
+<td style='text-align: left;'>52</td>
+<td style='text-align: center;'>54gene</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Healthcare</td>
+<td style='text-align: center;'>4.5</td>
+<td style='text-align: center;'>July</td>
+</tr>
+<tr>
+<td style='text-align: left;'>53</td>
+<td style='text-align: center;'>Enko Education</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Education</td>
+<td style='text-align: center;'>1.4</td>
+<td style='text-align: center;'>July</td>
+</tr>
+<tr>
+<td style='text-align: left;'>54</td>
+<td style='text-align: center;'>Rent to Own</td>
+<td style='text-align: center;'>Zambia</td>
+<td style='text-align: center;'>2010</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.1</td>
+<td style='text-align: center;'>July</td>
+</tr>
+<tr>
+<td style='text-align: left;'>55</td>
+<td style='text-align: center;'>Lynk</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>Jobs</td>
+<td style='text-align: center;'></td>
+<td style='text-align: center;'>July</td>
+</tr>
+<tr>
+<td style='text-align: left;'>56</td>
+<td style='text-align: center;'>Kalido</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Jobs</td>
+<td style='text-align: center;'>2</td>
+<td style='text-align: center;'>August</td>
+</tr>
+<tr>
+<td style='text-align: left;'>57</td>
+<td style='text-align: center;'>MoneyFellows</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>August</td>
+</tr>
+<tr>
+<td style='text-align: left;'>58</td>
+<td style='text-align: center;'>TechAdvance</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2009</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>August</td>
+</tr>
+<tr>
+<td style='text-align: left;'>59</td>
+<td style='text-align: center;'>Kobo360</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'>30</td>
+<td style='text-align: center;'>August</td>
+</tr>
+<tr>
+<td style='text-align: left;'>60</td>
+<td style='text-align: center;'>Nomanini</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2011</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>4</td>
+<td style='text-align: center;'>August</td>
+</tr>
+<tr>
+<td style='text-align: left;'>61</td>
+<td style='text-align: center;'>Bbox</td>
+<td style='text-align: center;'>UK</td>
+<td style='text-align: center;'>2010</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>50</td>
+<td style='text-align: center;'>August</td>
+</tr>
+<tr>
+<td style='text-align: left;'>62</td>
+<td style='text-align: center;'>Tastemakers Africa</td>
+<td style='text-align: center;'>USA</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Services</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>August</td>
+</tr>
+<tr>
+<td style='text-align: left;'>63</td>
+<td style='text-align: center;'>PEG Africa</td>
+<td style='text-align: center;'>Ghana</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>5</td>
+<td style='text-align: center;'>September</td>
+</tr>
+<tr>
+<td style='text-align: left;'>64</td>
+<td style='text-align: center;'>Kuda</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.6</td>
+<td style='text-align: center;'>September</td>
+</tr>
+<tr>
+<td style='text-align: left;'>65</td>
+<td style='text-align: center;'>FairMoney</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>11.1</td>
+<td style='text-align: center;'>September</td>
+</tr>
+<tr>
+<td style='text-align: left;'>66</td>
+<td style='text-align: center;'>Snapplify</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2011</td>
+<td style='text-align: center;'>Education</td>
+<td style='text-align: center;'>2</td>
+<td style='text-align: center;'>September</td>
+</tr>
+<tr>
+<td style='text-align: left;'>67</td>
+<td style='text-align: center;'>Zazu</td>
+<td style='text-align: center;'>Zambia</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.4</td>
+<td style='text-align: center;'>September</td>
+</tr>
+<tr>
+<td style='text-align: left;'>68</td>
+<td style='text-align: center;'>MaxAB</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Retail</td>
+<td style='text-align: center;'>6.2</td>
+<td style='text-align: center;'>September</td>
+</tr>
+<tr>
+<td style='text-align: left;'>69</td>
+<td style='text-align: center;'>TemTem</td>
+<td style='text-align: center;'>Algeria</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'>4</td>
+<td style='text-align: center;'>September</td>
+</tr>
+<tr>
+<td style='text-align: left;'>70</td>
+<td style='text-align: center;'>Eneza</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2011</td>
+<td style='text-align: center;'>Education</td>
+<td style='text-align: center;'>2.9</td>
+<td style='text-align: center;'>September</td>
+</tr>
+<tr>
+<td style='text-align: left;'>71</td>
+<td style='text-align: center;'>SweepSouth</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Services</td>
+<td style='text-align: center;'>3.3</td>
+<td style='text-align: center;'>October</td>
+</tr>
+<tr>
+<td style='text-align: left;'>72</td>
+<td style='text-align: center;'>PEG Africa</td>
+<td style='text-align: center;'>Ghana</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>4</td>
+<td style='text-align: center;'>October</td>
+</tr>
+<tr>
+<td style='text-align: left;'>73</td>
+<td style='text-align: center;'>AZA (BitPesa)</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>15</td>
+<td style='text-align: center;'>October</td>
+</tr>
+<tr>
+<td style='text-align: left;'>74</td>
+<td style='text-align: center;'>Twiga Foods</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Agriculture</td>
+<td style='text-align: center;'>29.8</td>
+<td style='text-align: center;'>October</td>
+</tr>
+<tr>
+<td style='text-align: left;'>75</td>
+<td style='text-align: center;'>Pineapple</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.5</td>
+<td style='text-align: center;'>October</td>
+</tr>
+<tr>
+<td style='text-align: left;'>76</td>
+<td style='text-align: center;'>AI Mentor</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Education</td>
+<td style='text-align: center;'>4.5</td>
+<td style='text-align: center;'>October</td>
+</tr>
+<tr>
+<td style='text-align: left;'>77</td>
+<td style='text-align: center;'>Sendy</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'>2</td>
+<td style='text-align: center;'>October</td>
+</tr>
+<tr>
+<td style='text-align: left;'>78</td>
+<td style='text-align: center;'>ProfitShare Partners</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>1.7</td>
+<td style='text-align: center;'>November</td>
+</tr>
+<tr>
+<td style='text-align: left;'>79</td>
+<td style='text-align: center;'>Lori Systems</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'>30</td>
+<td style='text-align: center;'>November</td>
+</tr>
+<tr>
+<td style='text-align: left;'>80</td>
+<td style='text-align: center;'>Interswitch</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2002</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>200</td>
+<td style='text-align: center;'>November</td>
+</tr>
+<tr>
+<td style='text-align: left;'>81</td>
+<td style='text-align: center;'>Yodawy</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Healthcare</td>
+<td style='text-align: center;'>1</td>
+<td style='text-align: center;'>November</td>
+</tr>
+<tr>
+<td style='text-align: left;'>82</td>
+<td style='text-align: center;'>PalmPay</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>40</td>
+<td style='text-align: center;'>November</td>
+</tr>
+<tr>
+<td style='border-bottom: 2px solid grey; text-align: left;'>83</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>Opay</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>Nigeria</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>2018</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>Fintech</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>120</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>November</td>
+</tr>
+</tbody>
+</table></div></div>
+
+<h3 style="color: brown; text-transform: uppercase;">Investigating categories in the data</h3>
+
+<div class="chunk" id="unnamed-chunk-4"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">levels</span><span class="hl std">(data</span><span class="hl opt">$</span><span class="hl std">Country.HQ)</span> <span class="hl com"># examine countries where HQs are located.</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##  [1] &quot;Algeria&quot;      &quot;Egypt&quot;        &quot;Ghana&quot;        &quot;Kenya&quot;        &quot;Mauritius&quot;   
+##  [6] &quot;Nigeria&quot;      &quot;Senegal&quot;      &quot;South Africa&quot; &quot;Tanzania&quot;     &quot;Tunisia&quot;     
+## [11] &quot;Uganda&quot;       &quot;UK&quot;           &quot;USA&quot;          &quot;Zambia&quot;       &quot;Zimbabwe&quot;
+</pre></div>
+<div class="source"><pre class="knitr r"><span class="hl kwd">levels</span><span class="hl std">(data</span><span class="hl opt">$</span><span class="hl std">Sector)</span> <span class="hl com"># examine sectors.</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##  [1] &quot;Agriculture&quot;       &quot;Deeptech&quot;          &quot;Education&quot;        
+##  [4] &quot;eGov&quot;              &quot;Energy&quot;            &quot;Fintech&quot;          
+##  [7] &quot;Healthcare&quot;        &quot;Housing&quot;           &quot;Jobs&quot;             
+## [10] &quot;Logistics &amp; Trans&quot; &quot;Retail&quot;            &quot;Services&quot;         
+## [13] &quot;Water&quot;
+</pre></div>
+</div></div>
+
+
+<h3  style="color: green; text-transform: uppercase;"> Q1: What is the geographic distribution of the startups? </h3>
+
+<div class="chunk" id="unnamed-chunk-5"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">by_country</span> <span class="hl kwb">&lt;-</span> <span class="hl std">data</span> <span class="hl opt">%&gt;%</span>
+              <span class="hl kwd">group_by</span><span class="hl std">(Country.HQ)</span> <span class="hl opt">%&gt;%</span>
+              <span class="hl kwd">summarise</span><span class="hl std">(</span> <span class="hl kwc">country_count</span> <span class="hl std">=</span> <span class="hl kwd">n</span><span class="hl std">() )</span> <span class="hl opt">%&gt;%</span>
+              <span class="hl kwd">arrange</span><span class="hl std">(</span><span class="hl kwd">desc</span><span class="hl std">(Country.HQ))</span>
+
+<span class="hl std">by_country</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">as.data.frame</span><span class="hl std">(by_country)</span>
+<span class="hl kwd">htmlTable</span><span class="hl std">(by_country)</span>
+</pre></div>
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey;'> </th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Country.HQ</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>country_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='text-align: left;'>1</td>
+<td style='text-align: center;'>Zimbabwe</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>2</td>
+<td style='text-align: center;'>Zambia</td>
+<td style='text-align: center;'>2</td>
+</tr>
+<tr>
+<td style='text-align: left;'>3</td>
+<td style='text-align: center;'>USA</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>4</td>
+<td style='text-align: center;'>UK</td>
+<td style='text-align: center;'>2</td>
+</tr>
+<tr>
+<td style='text-align: left;'>5</td>
+<td style='text-align: center;'>Uganda</td>
+<td style='text-align: center;'>4</td>
+</tr>
+<tr>
+<td style='text-align: left;'>6</td>
+<td style='text-align: center;'>Tunisia</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>7</td>
+<td style='text-align: center;'>Tanzania</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>8</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>24</td>
+</tr>
+<tr>
+<td style='text-align: left;'>9</td>
+<td style='text-align: center;'>Senegal</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>10</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>18</td>
+</tr>
+<tr>
+<td style='text-align: left;'>11</td>
+<td style='text-align: center;'>Mauritius</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>12</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>13</td>
+</tr>
+<tr>
+<td style='text-align: left;'>13</td>
+<td style='text-align: center;'>Ghana</td>
+<td style='text-align: center;'>6</td>
+</tr>
+<tr>
+<td style='text-align: left;'>14</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>7</td>
+</tr>
+<tr>
+<td style='border-bottom: 2px solid grey; text-align: left;'>15</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>Algeria</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>1</td>
+</tr>
+</tbody>
+</table></div></div>
+
+<div class="chunk" id="unnamed-chunk-6"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">ggplot</span><span class="hl std">(by_country,</span> <span class="hl kwd">aes</span><span class="hl std">(</span><span class="hl kwc">x</span><span class="hl std">=by_country</span><span class="hl opt">$</span><span class="hl std">Country.HQ,</span> <span class="hl kwc">y</span><span class="hl std">=by_country</span><span class="hl opt">$</span><span class="hl std">country_count))</span> <span class="hl opt">+</span>
+  <span class="hl kwd">geom_bar</span><span class="hl std">(</span><span class="hl kwc">stat</span><span class="hl std">=</span><span class="hl str">&quot;identity&quot;</span><span class="hl std">,</span> <span class="hl kwc">fill</span> <span class="hl std">=</span> <span class="hl str">&quot;darkgray&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">labs</span><span class="hl std">(</span><span class="hl kwc">x</span> <span class="hl std">=</span> <span class="hl str">&quot;Country HQ&quot;</span><span class="hl std">,</span> <span class="hl kwc">y</span> <span class="hl std">=</span> <span class="hl str">&quot;Count&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">theme_classic</span><span class="hl std">()</span> <span class="hl opt">+</span>
+  <span class="hl kwd">ggtitle</span><span class="hl std">(</span><span class="hl str">&quot;LOCATION OF STARTUP HQs&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">theme</span><span class="hl std">(</span><span class="hl kwc">panel.border</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span> <span class="hl kwc">panel.grid.major</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span>
+        <span class="hl kwc">panel.background</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span> <span class="hl kwc">panel.grid.minor</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span>
+        <span class="hl kwc">plot.title</span> <span class="hl std">=</span> <span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">hjust</span> <span class="hl std">=</span> <span class="hl num">0.5</span><span class="hl std">),</span>
+        <span class="hl kwc">axis.text.x</span> <span class="hl std">=</span> <span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">angle</span><span class="hl std">=</span><span class="hl num">90</span><span class="hl std">,</span> <span class="hl kwc">hjust</span><span class="hl std">=</span><span class="hl num">1</span><span class="hl std">),</span>
+        <span class="hl kwc">text</span><span class="hl std">=</span><span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">size</span><span class="hl std">=</span><span class="hl num">14</span><span class="hl std">,</span>  <span class="hl kwc">family</span><span class="hl std">=</span><span class="hl str">&quot;Garamond&quot;</span><span class="hl std">,</span> <span class="hl kwc">face</span><span class="hl std">=</span><span class="hl str">&quot;bold&quot;</span><span class="hl std">),</span>
+        <span class="hl kwc">axis.line</span> <span class="hl std">=</span> <span class="hl kwd">element_line</span><span class="hl std">(</span><span class="hl kwc">colour</span> <span class="hl std">=</span> <span class="hl str">&quot;black&quot;</span><span class="hl std">))</span> <span class="hl opt">+</span>
+  <span class="hl kwd">ggsave</span><span class="hl std">(</span><span class="hl kwc">file</span> <span class="hl std">=</span> <span class="hl str">&quot;Location.png&quot;</span><span class="hl std">,</span><span class="hl kwc">width</span> <span class="hl std">=</span> <span class="hl num">20</span><span class="hl std">,</span> <span class="hl kwc">height</span> <span class="hl std">=</span> <span class="hl num">15</span><span class="hl std">,</span> <span class="hl kwc">units</span> <span class="hl std">=</span> <span class="hl str">&quot;cm&quot;</span><span class="hl std">,</span> <span class="hl kwc">dpi</span> <span class="hl std">=</span> <span class="hl num">1200</span><span class="hl std">)</span>
+</pre></div>
+</div><div class="rimage default"><img src="figure/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" class="plot" /></div></div>
+
+
+<h3 style="color: green; text-transform: uppercase;">Q2: What is the sector(-ial) distribution of these startups? </h3>
+
+<div class="chunk" id="unnamed-chunk-7"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">by_sector</span> <span class="hl kwb">&lt;-</span> <span class="hl std">data</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">group_by</span><span class="hl std">(Sector)</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">summarise</span><span class="hl std">(</span> <span class="hl kwc">sector_count</span> <span class="hl std">=</span> <span class="hl kwd">n</span><span class="hl std">() )</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">arrange</span><span class="hl std">(</span><span class="hl kwd">desc</span><span class="hl std">(Sector))</span>
+
+<span class="hl std">by_sector</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">as.data.frame</span><span class="hl std">(by_sector)</span>
+<span class="hl kwd">htmlTable</span><span class="hl std">(by_sector)</span>
+</pre></div>
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey;'> </th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Sector</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>sector_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='text-align: left;'>1</td>
+<td style='text-align: center;'>Water</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>2</td>
+<td style='text-align: center;'>Services</td>
+<td style='text-align: center;'>4</td>
+</tr>
+<tr>
+<td style='text-align: left;'>3</td>
+<td style='text-align: center;'>Retail</td>
+<td style='text-align: center;'>5</td>
+</tr>
+<tr>
+<td style='text-align: left;'>4</td>
+<td style='text-align: center;'>Logistics & Trans</td>
+<td style='text-align: center;'>8</td>
+</tr>
+<tr>
+<td style='text-align: left;'>5</td>
+<td style='text-align: center;'>Jobs</td>
+<td style='text-align: center;'>4</td>
+</tr>
+<tr>
+<td style='text-align: left;'>6</td>
+<td style='text-align: center;'>Housing</td>
+<td style='text-align: center;'>2</td>
+</tr>
+<tr>
+<td style='text-align: left;'>7</td>
+<td style='text-align: center;'>Healthcare</td>
+<td style='text-align: center;'>7</td>
+</tr>
+<tr>
+<td style='text-align: left;'>8</td>
+<td style='text-align: center;'>Fintech</td>
+<td style='text-align: center;'>28</td>
+</tr>
+<tr>
+<td style='text-align: left;'>9</td>
+<td style='text-align: center;'>Energy</td>
+<td style='text-align: center;'>10</td>
+</tr>
+<tr>
+<td style='text-align: left;'>10</td>
+<td style='text-align: center;'>eGov</td>
+<td style='text-align: center;'>2</td>
+</tr>
+<tr>
+<td style='text-align: left;'>11</td>
+<td style='text-align: center;'>Education</td>
+<td style='text-align: center;'>5</td>
+</tr>
+<tr>
+<td style='text-align: left;'>12</td>
+<td style='text-align: center;'>Deeptech</td>
+<td style='text-align: center;'>2</td>
+</tr>
+<tr>
+<td style='border-bottom: 2px solid grey; text-align: left;'>13</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>Agriculture</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>5</td>
+</tr>
+</tbody>
+</table></div></div>
+
+<div class="chunk" id="unnamed-chunk-8"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">ggplot</span><span class="hl std">(by_sector,</span> <span class="hl kwd">aes</span><span class="hl std">(</span><span class="hl kwc">x</span><span class="hl std">=by_sector</span><span class="hl opt">$</span><span class="hl std">Sector,</span> <span class="hl kwc">y</span><span class="hl std">=by_sector</span><span class="hl opt">$</span><span class="hl std">sector_count))</span> <span class="hl opt">+</span>
+  <span class="hl kwd">geom_bar</span><span class="hl std">(</span><span class="hl kwc">stat</span><span class="hl std">=</span><span class="hl str">&quot;identity&quot;</span><span class="hl std">,</span> <span class="hl kwc">fill</span> <span class="hl std">=</span> <span class="hl str">&quot;darkgray&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">labs</span><span class="hl std">(</span><span class="hl kwc">x</span> <span class="hl std">=</span> <span class="hl str">&quot;Sector&quot;</span><span class="hl std">,</span> <span class="hl kwc">y</span> <span class="hl std">=</span> <span class="hl str">&quot;Count&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">theme_classic</span><span class="hl std">()</span> <span class="hl opt">+</span>
+  <span class="hl kwd">ggtitle</span><span class="hl std">(</span><span class="hl str">&quot;SECTORS OF STARTUPS&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">theme</span><span class="hl std">(</span><span class="hl kwc">panel.border</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span> <span class="hl kwc">panel.grid.major</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span>
+        <span class="hl kwc">panel.background</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span> <span class="hl kwc">panel.grid.minor</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span>
+        <span class="hl kwc">plot.title</span> <span class="hl std">=</span> <span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">hjust</span> <span class="hl std">=</span> <span class="hl num">0.5</span><span class="hl std">),</span>
+        <span class="hl kwc">axis.text.x</span> <span class="hl std">=</span> <span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">angle</span><span class="hl std">=</span><span class="hl num">90</span><span class="hl std">,</span> <span class="hl kwc">hjust</span><span class="hl std">=</span><span class="hl num">1</span><span class="hl std">),</span>
+        <span class="hl kwc">text</span><span class="hl std">=</span><span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">size</span><span class="hl std">=</span><span class="hl num">14</span><span class="hl std">,</span>  <span class="hl kwc">family</span><span class="hl std">=</span><span class="hl str">&quot;Garamond&quot;</span><span class="hl std">,</span> <span class="hl kwc">face</span><span class="hl std">=</span><span class="hl str">&quot;bold&quot;</span><span class="hl std">),</span>
+        <span class="hl kwc">axis.line</span> <span class="hl std">=</span> <span class="hl kwd">element_line</span><span class="hl std">(</span><span class="hl kwc">colour</span> <span class="hl std">=</span> <span class="hl str">&quot;black&quot;</span><span class="hl std">))</span> <span class="hl opt">+</span>
+  <span class="hl kwd">ggsave</span><span class="hl std">(</span><span class="hl kwc">file</span> <span class="hl std">=</span> <span class="hl str">&quot;Sectors.png&quot;</span><span class="hl std">,</span><span class="hl kwc">width</span> <span class="hl std">=</span> <span class="hl num">20</span><span class="hl std">,</span> <span class="hl kwc">height</span> <span class="hl std">=</span> <span class="hl num">15</span><span class="hl std">,</span> <span class="hl kwc">units</span> <span class="hl std">=</span> <span class="hl str">&quot;cm&quot;</span><span class="hl std">,</span> <span class="hl kwc">dpi</span> <span class="hl std">=</span> <span class="hl num">1200</span><span class="hl std">)</span>
+</pre></div>
+</div><div class="rimage default"><img src="figure/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" class="plot" /></div></div>
+
+
+<h3 style="color: green; text-transform: uppercase;"> Q3: When were these startups launched?</h3>
+
+<div class="chunk" id="unnamed-chunk-9"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">by_launch</span> <span class="hl kwb">&lt;-</span> <span class="hl std">data</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">group_by</span><span class="hl std">(Launch)</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">summarise</span><span class="hl std">(</span> <span class="hl kwc">launch_count</span> <span class="hl std">=</span> <span class="hl kwd">n</span><span class="hl std">() )</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">arrange</span><span class="hl std">(</span><span class="hl kwd">desc</span><span class="hl std">(Launch))</span>
+
+<span class="hl std">by_launch</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">as.data.frame</span><span class="hl std">(by_launch)</span>
+<span class="hl kwd">htmlTable</span><span class="hl std">(by_launch)</span>
+</pre></div>
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey;'> </th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Launch</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>launch_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='text-align: left;'>1</td>
+<td style='text-align: center;'>2018</td>
+<td style='text-align: center;'>10</td>
+</tr>
+<tr>
+<td style='text-align: left;'>2</td>
+<td style='text-align: center;'>2017</td>
+<td style='text-align: center;'>11</td>
+</tr>
+<tr>
+<td style='text-align: left;'>3</td>
+<td style='text-align: center;'>2016</td>
+<td style='text-align: center;'>10</td>
+</tr>
+<tr>
+<td style='text-align: left;'>4</td>
+<td style='text-align: center;'>2015</td>
+<td style='text-align: center;'>8</td>
+</tr>
+<tr>
+<td style='text-align: left;'>5</td>
+<td style='text-align: center;'>2014</td>
+<td style='text-align: center;'>13</td>
+</tr>
+<tr>
+<td style='text-align: left;'>6</td>
+<td style='text-align: center;'>2013</td>
+<td style='text-align: center;'>11</td>
+</tr>
+<tr>
+<td style='text-align: left;'>7</td>
+<td style='text-align: center;'>2012</td>
+<td style='text-align: center;'>4</td>
+</tr>
+<tr>
+<td style='text-align: left;'>8</td>
+<td style='text-align: center;'>2011</td>
+<td style='text-align: center;'>4</td>
+</tr>
+<tr>
+<td style='text-align: left;'>9</td>
+<td style='text-align: center;'>2010</td>
+<td style='text-align: center;'>7</td>
+</tr>
+<tr>
+<td style='text-align: left;'>10</td>
+<td style='text-align: center;'>2009</td>
+<td style='text-align: center;'>3</td>
+</tr>
+<tr>
+<td style='text-align: left;'>11</td>
+<td style='text-align: center;'>2008</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='border-bottom: 2px solid grey; text-align: left;'>12</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>2002</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>1</td>
+</tr>
+</tbody>
+</table></div></div>
+
+<div class="chunk" id="unnamed-chunk-10"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">ggplot</span><span class="hl std">(by_launch,</span> <span class="hl kwd">aes</span><span class="hl std">(</span><span class="hl kwc">x</span><span class="hl std">=</span><span class="hl kwd">as.character</span><span class="hl std">(by_launch</span><span class="hl opt">$</span><span class="hl std">Launch),</span> <span class="hl kwc">y</span><span class="hl std">=by_launch</span><span class="hl opt">$</span><span class="hl std">launch_count))</span> <span class="hl opt">+</span>
+  <span class="hl kwd">geom_bar</span><span class="hl std">(</span><span class="hl kwc">stat</span><span class="hl std">=</span><span class="hl str">&quot;identity&quot;</span><span class="hl std">,</span> <span class="hl kwc">fill</span> <span class="hl std">=</span> <span class="hl str">&quot;darkgray&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">labs</span><span class="hl std">(</span><span class="hl kwc">x</span> <span class="hl std">=</span> <span class="hl str">&quot;Year&quot;</span><span class="hl std">,</span> <span class="hl kwc">y</span> <span class="hl std">=</span> <span class="hl str">&quot;Count&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">theme_classic</span><span class="hl std">()</span> <span class="hl opt">+</span>
+  <span class="hl kwd">ggtitle</span><span class="hl std">(</span><span class="hl str">&quot;LAUNCH YEARS OF STARTUPS&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">theme</span><span class="hl std">(</span><span class="hl kwc">panel.border</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span> <span class="hl kwc">panel.grid.major</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span>
+        <span class="hl kwc">panel.background</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span> <span class="hl kwc">panel.grid.minor</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span>
+        <span class="hl kwc">plot.title</span> <span class="hl std">=</span> <span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">hjust</span> <span class="hl std">=</span> <span class="hl num">0.5</span><span class="hl std">),</span>
+        <span class="hl kwc">axis.text.x</span> <span class="hl std">=</span> <span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">angle</span><span class="hl std">=</span><span class="hl num">90</span><span class="hl std">,</span> <span class="hl kwc">hjust</span><span class="hl std">=</span><span class="hl num">1</span><span class="hl std">),</span>
+        <span class="hl kwc">text</span><span class="hl std">=</span><span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">size</span><span class="hl std">=</span><span class="hl num">14</span><span class="hl std">,</span>  <span class="hl kwc">family</span><span class="hl std">=</span><span class="hl str">&quot;Garamond&quot;</span><span class="hl std">,</span> <span class="hl kwc">face</span><span class="hl std">=</span><span class="hl str">&quot;bold&quot;</span><span class="hl std">),</span>
+        <span class="hl kwc">axis.line</span> <span class="hl std">=</span> <span class="hl kwd">element_line</span><span class="hl std">(</span><span class="hl kwc">colour</span> <span class="hl std">=</span> <span class="hl str">&quot;black&quot;</span><span class="hl std">))</span> <span class="hl opt">+</span>
+  <span class="hl kwd">ggsave</span><span class="hl std">(</span><span class="hl kwc">file</span> <span class="hl std">=</span> <span class="hl str">&quot;Launch.png&quot;</span><span class="hl std">,</span><span class="hl kwc">width</span> <span class="hl std">=</span> <span class="hl num">20</span><span class="hl std">,</span> <span class="hl kwc">height</span> <span class="hl std">=</span> <span class="hl num">15</span><span class="hl std">,</span> <span class="hl kwc">units</span> <span class="hl std">=</span> <span class="hl str">&quot;cm&quot;</span><span class="hl std">,</span> <span class="hl kwc">dpi</span> <span class="hl std">=</span> <span class="hl num">1200</span><span class="hl std">)</span>
+</pre></div>
+</div><div class="rimage default"><img src="figure/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" class="plot" /></div></div>
+
+
+
+<h3 style="color: green; text-transform: uppercase;"> Q4: How much have these startups received by country of HQ? </h3>
+
+<div class="chunk" id="unnamed-chunk-11"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">by_amount</span> <span class="hl kwb">&lt;-</span> <span class="hl std">data</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">group_by</span><span class="hl std">(Country.HQ)</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">summarise</span><span class="hl std">(</span> <span class="hl kwc">Amount</span> <span class="hl std">=</span> <span class="hl kwd">sum</span><span class="hl std">(Amount,</span> <span class="hl kwc">na.rm</span> <span class="hl std">=</span> <span class="hl num">TRUE</span> <span class="hl std">)  )</span> <span class="hl opt">%&gt;%</span>
+  <span class="hl kwd">arrange</span><span class="hl std">(</span><span class="hl kwd">desc</span><span class="hl std">(Country.HQ))</span>
+
+<span class="hl std">by_amount</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">as.data.frame</span><span class="hl std">(by_amount)</span>
+<span class="hl kwd">htmlTable</span><span class="hl std">(by_amount)</span>
+</pre></div>
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey;'> </th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Country.HQ</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='text-align: left;'>1</td>
+<td style='text-align: center;'>Zimbabwe</td>
+<td style='text-align: center;'>13</td>
+</tr>
+<tr>
+<td style='text-align: left;'>2</td>
+<td style='text-align: center;'>Zambia</td>
+<td style='text-align: center;'>2.5</td>
+</tr>
+<tr>
+<td style='text-align: left;'>3</td>
+<td style='text-align: center;'>USA</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>4</td>
+<td style='text-align: center;'>UK</td>
+<td style='text-align: center;'>81</td>
+</tr>
+<tr>
+<td style='text-align: left;'>5</td>
+<td style='text-align: center;'>Uganda</td>
+<td style='text-align: center;'>15</td>
+</tr>
+<tr>
+<td style='text-align: left;'>6</td>
+<td style='text-align: center;'>Tunisia</td>
+<td style='text-align: center;'>7</td>
+</tr>
+<tr>
+<td style='text-align: left;'>7</td>
+<td style='text-align: center;'>Tanzania</td>
+<td style='text-align: center;'>1.5</td>
+</tr>
+<tr>
+<td style='text-align: left;'>8</td>
+<td style='text-align: center;'>South Africa</td>
+<td style='text-align: center;'>111.3</td>
+</tr>
+<tr>
+<td style='text-align: left;'>9</td>
+<td style='text-align: center;'>Senegal</td>
+<td style='text-align: center;'>1</td>
+</tr>
+<tr>
+<td style='text-align: left;'>10</td>
+<td style='text-align: center;'>Nigeria</td>
+<td style='text-align: center;'>597</td>
+</tr>
+<tr>
+<td style='text-align: left;'>11</td>
+<td style='text-align: center;'>Mauritius</td>
+<td style='text-align: center;'>26</td>
+</tr>
+<tr>
+<td style='text-align: left;'>12</td>
+<td style='text-align: center;'>Kenya</td>
+<td style='text-align: center;'>107.7</td>
+</tr>
+<tr>
+<td style='text-align: left;'>13</td>
+<td style='text-align: center;'>Ghana</td>
+<td style='text-align: center;'>51.9</td>
+</tr>
+<tr>
+<td style='text-align: left;'>14</td>
+<td style='text-align: center;'>Egypt</td>
+<td style='text-align: center;'>62.7</td>
+</tr>
+<tr>
+<td style='border-bottom: 2px solid grey; text-align: left;'>15</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>Algeria</td>
+<td style='border-bottom: 2px solid grey; text-align: center;'>4</td>
+</tr>
+</tbody>
+</table></div></div>
+
+<div class="chunk" id="unnamed-chunk-12"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">ggplot</span><span class="hl std">(by_amount,</span> <span class="hl kwd">aes</span><span class="hl std">(</span><span class="hl kwc">x</span><span class="hl std">=</span><span class="hl kwd">as.character</span><span class="hl std">(by_amount</span><span class="hl opt">$</span><span class="hl std">Country.HQ),</span> <span class="hl kwc">y</span><span class="hl std">=by_amount</span><span class="hl opt">$</span><span class="hl std">Amount))</span> <span class="hl opt">+</span>
+  <span class="hl kwd">geom_bar</span><span class="hl std">(</span><span class="hl kwc">stat</span><span class="hl std">=</span><span class="hl str">&quot;identity&quot;</span><span class="hl std">,</span> <span class="hl kwc">fill</span> <span class="hl std">=</span> <span class="hl str">&quot;darkgray&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">labs</span><span class="hl std">(</span><span class="hl kwc">x</span> <span class="hl std">=</span> <span class="hl str">&quot;Country&quot;</span><span class="hl std">,</span> <span class="hl kwc">y</span> <span class="hl std">=</span> <span class="hl str">&quot;Amount (million dollars)&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">theme_classic</span><span class="hl std">()</span> <span class="hl opt">+</span>
+  <span class="hl kwd">ggtitle</span><span class="hl std">(</span><span class="hl str">&quot;STARTUP HQ LOCATION AND FUNDING RAISED&quot;</span><span class="hl std">)</span> <span class="hl opt">+</span>
+  <span class="hl kwd">theme</span><span class="hl std">(</span><span class="hl kwc">panel.border</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span> <span class="hl kwc">panel.grid.major</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span>
+        <span class="hl kwc">panel.background</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span> <span class="hl kwc">panel.grid.minor</span> <span class="hl std">=</span> <span class="hl kwd">element_blank</span><span class="hl std">(),</span>
+        <span class="hl kwc">plot.title</span> <span class="hl std">=</span> <span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">hjust</span> <span class="hl std">=</span> <span class="hl num">0.5</span><span class="hl std">),</span>
+        <span class="hl kwc">axis.text.x</span> <span class="hl std">=</span> <span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">angle</span><span class="hl std">=</span><span class="hl num">90</span><span class="hl std">,</span> <span class="hl kwc">hjust</span><span class="hl std">=</span><span class="hl num">1</span><span class="hl std">),</span>
+        <span class="hl kwc">text</span><span class="hl std">=</span><span class="hl kwd">element_text</span><span class="hl std">(</span><span class="hl kwc">size</span><span class="hl std">=</span><span class="hl num">14</span><span class="hl std">,</span>  <span class="hl kwc">family</span><span class="hl std">=</span><span class="hl str">&quot;Garamond&quot;</span><span class="hl std">,</span> <span class="hl kwc">face</span><span class="hl std">=</span><span class="hl str">&quot;bold&quot;</span><span class="hl std">),</span>
+        <span class="hl kwc">axis.line</span> <span class="hl std">=</span> <span class="hl kwd">element_line</span><span class="hl std">(</span><span class="hl kwc">colour</span> <span class="hl std">=</span> <span class="hl str">&quot;black&quot;</span><span class="hl std">))</span> <span class="hl opt">+</span>
+  <span class="hl kwd">ggsave</span><span class="hl std">(</span><span class="hl kwc">file</span> <span class="hl std">=</span> <span class="hl str">&quot;Amount.png&quot;</span><span class="hl std">,</span><span class="hl kwc">width</span> <span class="hl std">=</span> <span class="hl num">20</span><span class="hl std">,</span> <span class="hl kwc">height</span> <span class="hl std">=</span> <span class="hl num">15</span><span class="hl std">,</span> <span class="hl kwc">units</span> <span class="hl std">=</span> <span class="hl str">&quot;cm&quot;</span><span class="hl std">,</span> <span class="hl kwc">dpi</span> <span class="hl std">=</span> <span class="hl num">1200</span><span class="hl std">)</span>
+</pre></div>
+</div><div class="rimage default"><img src="figure/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" class="plot" /></div></div>
+
+
+<p><b>Produced by <a href="https://www.linkedin.com/in/bayoishola20/">@bayoishola20</a></b></p>
+
+<h6 style="color: red;"> Have a suggestion? Let me know. </h6>
+
+</body>
+</html>
